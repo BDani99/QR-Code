@@ -1,0 +1,69 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Users\bdani\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.2.3
+2 info using node@v18.18.0
+3 timing npm:load:whichnode Completed in 3ms
+4 timing config:load:defaults Completed in 3ms
+5 timing config:load:file:C:\Users\bdani\AppData\Roaming\npm\node_modules\npm\npmrc Completed in 6ms
+6 timing config:load:builtin Completed in 6ms
+7 timing config:load:cli Completed in 2ms
+8 timing config:load:env Completed in 1ms
+9 timing config:load:file:C:\Users\bdani\Downloads\QR-Code main\QR-Code main\.npmrc Completed in 0ms
+10 timing config:load:project Completed in 2ms
+11 timing config:load:file:C:\Users\bdani\.npmrc Completed in 0ms
+12 timing config:load:user Completed in 0ms
+13 timing config:load:file:C:\Users\bdani\AppData\Roaming\npm\etc\npmrc Completed in 1ms
+14 timing config:load:global Completed in 1ms
+15 timing config:load:setEnvs Completed in 1ms
+16 timing config:load Completed in 18ms
+17 timing npm:load:configload Completed in 18ms
+18 timing config:load:flatten Completed in 3ms
+19 timing npm:load:mkdirpcache Completed in 1ms
+20 timing npm:load:mkdirplogs Completed in 0ms
+21 verbose title npm install flask
+22 verbose argv "install" "flask"
+23 timing npm:load:setTitle Completed in 2ms
+24 timing npm:load:display Completed in 0ms
+25 verbose logfile logs-max:10 dir:C:\Users\bdani\Downloads\QR-Code main\QR-Code main\UsersbdaniAppDataLocalnpm-cache\_logs\2023-11-29T13_40_46_734Z-
+26 verbose logfile C:\Users\bdani\Downloads\QR-Code main\QR-Code main\UsersbdaniAppDataLocalnpm-cache\_logs\2023-11-29T13_40_46_734Z-debug-0.log
+27 timing npm:load:logFile Completed in 11ms
+28 timing npm:load:timers Completed in 0ms
+29 timing npm:load:configScope Completed in 0ms
+30 timing npm:load Completed in 65ms
+31 timing config:load:flatten Completed in 0ms
+32 timing arborist:ctor Completed in 1ms
+33 silly logfile done cleaning log files
+34 timing arborist:ctor Completed in 0ms
+35 timing idealTree:init Completed in 10ms
+36 timing idealTree:userRequests Completed in 4ms
+37 silly idealTree buildDeps
+38 silly fetch manifest flask@*
+39 http fetch GET 200 https://registry.npmjs.org/flask 1020ms (cache miss)
+40 silly placeDep ROOT flask@0.2.10 OK for:  want: *
+41 timing idealTree:#root Completed in 1029ms
+42 timing idealTree:node_modules/flask Completed in 0ms
+43 timing idealTree:buildDeps Completed in 1030ms
+44 timing idealTree:fixDepFlags Completed in 1ms
+45 timing idealTree Completed in 1046ms
+46 timing reify:loadTrees Completed in 1046ms
+47 timing reify:diffTrees Completed in 1ms
+48 silly reify moves {}
+49 timing reify:retireShallow Completed in 1ms
+50 timing reify:createSparse Completed in 1ms
+51 timing reify:loadBundles Completed in 0ms
+52 silly tarball no local data for flask@https://registry.npmjs.org/flask/-/flask-0.2.10.tgz. Extracting by manifest.
+53 http fetch GET 200 https://registry.npmjs.org/flask/-/flask-0.2.10.tgz 100ms (cache miss)
+54 timing reifyNode:node_modules/flask Completed in 106ms
+55 timing reify:unpack Completed in 106ms
+56 timing reify:unretire Completed in 0ms
+57 timing build:queue Completed in 0ms
+58 timing build:deps Completed in 1ms
+59 timing build Completed in 1ms
+60 timing reify:build Completed in 1ms
+61 timing reify:trash Completed in 0ms
+62 timing reify:save Completed in 7ms
+63 timing reify Completed in 1176ms
+64 silly ADD node_modules/flask
+65 timing command:install Completed in 1182ms
+66 verbose exit 0
+67 timing npm Completed in 1726ms
+68 info ok
