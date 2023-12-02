@@ -27,7 +27,12 @@ def get_current_user():
 
     if not user_id:
         return jsonify({"error": "Anauthorised"}), 401
+    
+    user = User.query.filter_by(id=str(user_id)).first()
 
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
     user = User.query.filter_by(id=user_id).first()
     return jsonify({
         "id": user.id,
@@ -38,6 +43,7 @@ def get_current_user():
         "placeOfBirth":user.placeOfBirth
     })
 
+
 @app.route('/buying', methods=['POST'])
 def purchase_tickets():
     event_id=request.json["event_id"]
@@ -47,11 +53,9 @@ def purchase_tickets():
     qrcode=request.json["qrcode"]
 
     event =Event.query.get(event_id)
-    user=User.query.get(user_id)
+    user=User.query.get(user_id)    
 
-    if not event or user:
-        return jsonify({"message":"Event or user not found"}), 404
-    
+
     for _ in range(numberofTickets):
         unique_qrcode = str(uuid4())
         ticket = Ticket(
@@ -66,6 +70,7 @@ def purchase_tickets():
     db.session.commit()
 
     session["user_id"]=ticket.user_id
+
 
     return jsonify({
         "event_id": ticket.event_id,
@@ -177,6 +182,8 @@ def get_single_event(event_id):
 
     return jsonify({"event": event_data})
 
+
+
 @app.route("/buying/<int:event_id>")
 def get_single_buying_event(event_id):
     event = Event.query.get(event_id)
@@ -193,6 +200,55 @@ def get_single_buying_event(event_id):
     }
 
     return jsonify({"event": event_data})
+
+@app.route("/ticket/<int:ticket_id>")
+def get_single_ticket(ticket_id):
+    ticket = Ticket.query.get(ticket_id)
+
+    if not ticket:
+        return jsonify({"message": "Event not found"}), 404
+
+    ticket_data = {
+        "id": ticket.id,
+        "name": ticket.event.name,
+        "event_date": ticket.event.dateOfEvent,
+        "event_location": ticket.event.location,
+        "event_image": ticket.event.image,
+        "event_price": ticket.event.price,
+        "user_name":ticket.user.name,
+        "dateOfBuyig": ticket.dateOfBuyig,
+        "user_name":ticket.user.name,
+        "qrcode":ticket.qrcode
+
+    }
+
+    return jsonify({"ticket": ticket_data})
+
+
+@app.route("/tickets", methods=["GET"])
+def get_tickets():
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    user_tickets = Ticket.query.filter_by(user_id=user_id).all()
+
+    tickets_data = []
+    for ticket in user_tickets:
+        tickets_data.append({
+            "ticket_id": ticket.id,
+            "event_name": ticket.event.name,
+            "event_date": ticket.event.dateOfEvent,
+            "event_location": ticket.event.location,
+            "qrcode": ticket.qrcode,
+            "event_image":ticket.event.image,
+            "dateOfBuyig": ticket.dateOfBuyig,
+            "event_price": ticket.event.price
+        })
+
+    return jsonify({"tickets": tickets_data}), 200
+
 
 if __name__=="__main__":
     app.run(debug=True)
