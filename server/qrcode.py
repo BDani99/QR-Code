@@ -1,15 +1,24 @@
-from flask import Flask,jsonify,request,session,make_response
+from flask import Flask,jsonify,request,session
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS,cross_origin
 from models import db,User,Ticket,Event
 from functools import wraps
 from uuid import uuid4
 from datetime import datetime
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
 
 app = Flask(__name__)
+admin=Admin()
 
 app.config['SECRET_KEY'] = 'QR-CODE'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///qrcodedb.db'
+
+
+admin.add_view(ModelView(User,db.session))
+admin.add_view(ModelView(Ticket,db.session))
+admin.add_view(ModelView(Event,db.session))
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = True
@@ -17,6 +26,7 @@ SQLALCHEMY_ECHO = True
 bcrypt=Bcrypt(app)
 CORS(app, supports_credentials=True)
 db.init_app(app)
+admin.init_app(app)
 
 with app.app_context():
     db.create_all()
@@ -40,7 +50,8 @@ def get_current_user():
         "name":user.name,
         "dateOfBirth":user.dateOfBirth,
         "address":user.address,
-        "placeOfBirth":user.placeOfBirth
+        "placeOfBirth":user.placeOfBirth,
+        "isAdmin":user.admin
     })
 
 

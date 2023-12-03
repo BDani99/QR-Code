@@ -15,6 +15,7 @@ class User(db.Model):
     dateOfBirth=db.Column(db.String(10))
     address=db.Column(db.String(100))
     placeOfBirth=db.Column(db.String(100))
+    admin=db.Column(db.Boolean,default=False)
     tickets = db.relationship('Ticket', backref='user_ref')
 
 class Ticket(db.Model):
@@ -38,5 +39,5 @@ class Event(db.Model):
     price=db.Column(db.Integer)
     category=db.Column(db.String(30))
     description=db.Column(db.String(50))
-    image=db.Column(db.String(50))    
+    image=db.Column(db.Text)    
     tickets = db.relationship('Ticket', backref='event_ref')
