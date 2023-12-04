@@ -17,7 +17,6 @@ from flask_jwt_extended import jwt_required
 app = Flask(__name__)
 admin=Admin()
 
-
 app.config['SECRET_KEY'] = 'QR-CODE'
 app.config['JWT_SECRET_KEY']=os.environ.get('JWT_SECRET','sample key')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///qrcodedb.db'
@@ -177,7 +176,7 @@ def logout_user():
     return "200"
 
 @app.route("/events")
-@jwt_required()
+#@jwt_required()
 def get_event():
     events = Event.query.all()
 
@@ -197,6 +196,24 @@ def get_event():
         event_list.append(event_dict)
 
     return jsonify({"events": event_list})
+
+@app.route("/qrcode", methods=["POST"])
+def compare_qrcode():
+    qrcode=request.json["qrcode"]
+
+    ticket = Ticket.query.filter_by(qrcode=qrcode).first()
+
+    if ticket:
+        if not ticket.isScanned:           
+            ticket.isScanned = True
+            db.session.commit()
+            return jsonify({"message": "A jegy sikeresen beolvasva."})
+        else:
+            
+            return jsonify({"message": "A jegy már fel lett használva."})
+    else:
+        
+        return jsonify({"message": "A jegy nem található az adatbázisban."}), 404
 
 @app.route("/events/<int:event_id>")
 def get_single_event(event_id):

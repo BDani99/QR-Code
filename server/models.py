@@ -24,6 +24,7 @@ class Ticket(db.Model):
     qrcode=db.Column(db.String(20))
     dateOfBuyig=db.Column(db.String(10))
     numberofTickets=db.Column(db.Integer)
+    isScanned=db.Column(db.Integer,default=False)
     user_id = db.Column(db.String(11), db.ForeignKey('users.id'), nullable=True)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
     user = db.relationship('User', backref='ticket_ref')
