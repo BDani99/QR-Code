@@ -315,6 +315,12 @@ def get_tickets():
 
     return jsonify({"tickets": tickets_data}), 200
 
+@app.route("/protected", methods=["GET"])
+@jwt_required()
+def protected():
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
+
 
 if __name__=="__main__":
     app.run(debug=True)
