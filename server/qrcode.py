@@ -73,6 +73,7 @@ def login_user():
 
 
 @app.route("/@me")
+@jwt_required()
 def get_current_user():
     user_id=session.get("user_id")
 
@@ -97,6 +98,7 @@ def get_current_user():
 
 
 @app.route('/buying', methods=['POST'])
+@jwt_required()
 def purchase_tickets():
     event_id=request.json["event_id"]
     user_id=request.json["user_id"]
@@ -171,12 +173,13 @@ def signup():
 
 
 @app.route("/logout" ,methods=["POST"])
+@jwt_required()
 def logout_user():
     session.pop("user_id")
     return "200"
 
 @app.route("/events")
-#@jwt_required()
+@jwt_required()
 def get_event():
     events = Event.query.all()
 
@@ -198,6 +201,7 @@ def get_event():
     return jsonify({"events": event_list})
 
 @app.route("/qrcode", methods=["POST"])
+@jwt_required()
 def compare_qrcode():
     qrcode=request.json["qrcode"]
 
@@ -216,6 +220,7 @@ def compare_qrcode():
         return jsonify({"message": "A jegy nem található az adatbázisban."}), 404
 
 @app.route("/events/<int:event_id>")
+@jwt_required()
 def get_single_event(event_id):
     event = Event.query.get(event_id)
 
@@ -238,6 +243,7 @@ def get_single_event(event_id):
 
 
 @app.route("/buying/<int:event_id>")
+@jwt_required()
 def get_single_buying_event(event_id):
     event = Event.query.get(event_id)
 
@@ -255,6 +261,7 @@ def get_single_buying_event(event_id):
     return jsonify({"event": event_data})
 
 @app.route("/ticket/<int:ticket_id>")
+@jwt_required()
 def get_single_ticket(ticket_id):
     ticket = Ticket.query.get(ticket_id)
 
@@ -279,6 +286,7 @@ def get_single_ticket(ticket_id):
 
 
 @app.route("/tickets", methods=["GET"])
+@jwt_required()
 def get_tickets():
     user_id = session.get("user_id")
 
