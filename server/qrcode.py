@@ -72,6 +72,11 @@ def login_user():
     })
 
 
+
+if __name__ == "__main__":
+    app.run()
+
+
 @app.route("/@me")
 @jwt_required()
 def get_current_user():

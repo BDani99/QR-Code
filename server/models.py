@@ -42,3 +42,4 @@ class Event(db.Model):
     description=db.Column(db.String(50))
     image=db.Column(db.Text)    
     tickets = db.relationship('Ticket', backref='event_ref')
+
