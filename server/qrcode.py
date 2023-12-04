@@ -5,14 +5,21 @@ from models import db,User,Ticket,Event
 from functools import wraps
 from uuid import uuid4
 from datetime import datetime
+import os
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_jwt_extended import JWTManager
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 
 app = Flask(__name__)
 admin=Admin()
 
+
 app.config['SECRET_KEY'] = 'QR-CODE'
+app.config['JWT_SECRET_KEY']=os.environ.get('JWT_SECRET','sample key')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///qrcodedb.db'
 
 
@@ -23,6 +30,7 @@ admin.add_view(ModelView(Event,db.session))
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = True
 
+jwt = JWTManager(app)
 bcrypt=Bcrypt(app)
 CORS(app, supports_credentials=True)
 db.init_app(app)
@@ -30,6 +38,40 @@ admin.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+# @app.route("/token", methods=["POST"])
+# def create_token():
+#     email = request.json.get("email", None)
+#     password = request.json.get("password", None)
+#     if email != "test" or password != "test":
+#         return jsonify({"msg": "Bad username or password"}), 401
+
+#     access_token = create_access_token(identity=email)
+#     return jsonify(access_token=access_token)
+
+
+@app.route("/login", methods=["POST"])
+def login_user():
+    email = request.json["email"]
+    password = request.json["password"]
+  
+    user = User.query.filter_by(email=email).first()
+  
+    if user is None:
+        return jsonify({"error": "Rossz felhasználónév vagy jelszó"}), 401
+  
+    if not bcrypt.check_password_hash(user.password, password):
+        return jsonify({"error": "Rossz felhasználónév vagy jelszó"}), 401
+      
+    session["user_id"] = user.id
+    access_token = create_access_token(identity=email)
+  
+    return jsonify({
+        "id": user.id,
+        "email": user.email,
+        "token":access_token
+    })
+
 
 @app.route("/@me")
 def get_current_user():
@@ -127,25 +169,7 @@ def signup():
         "pleaceOfBirth": new_user.placeOfBirth
     })
 
-@app.route("/login", methods=["POST"])
-def login_user():
-    email = request.json["email"]
-    password = request.json["password"]
-  
-    user = User.query.filter_by(email=email).first()
-  
-    if user is None:
-        return jsonify({"error": "Rossz felhasználónév vagy jelszó"}), 401
-  
-    if not bcrypt.check_password_hash(user.password, password):
-        return jsonify({"error": "Rossz felhasználónév vagy jelszó"}), 401
-      
-    session["user_id"] = user.id
-  
-    return jsonify({
-        "id": user.id,
-        "email": user.email
-    })
+
 
 @app.route("/logout" ,methods=["POST"])
 def logout_user():
@@ -153,6 +177,7 @@ def logout_user():
     return "200"
 
 @app.route("/events")
+@jwt_required()
 def get_event():
     events = Event.query.all()
 
